@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Button } from "react-native";
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { ref, onValue, set, push } from "firebase/database";
@@ -11,6 +11,10 @@ const SongsListScreen = (props) => {
   const [songsListData, setSongsListData] = useState({});
 
   useEffect(() => {
+    if (currentUserName === null) {
+      console.log("No user logged in");
+      return;
+    }
     const songsListRef = ref(db, currentUserName);
     onValue(songsListRef, (snapshot) => {
       const data = snapshot.val();
@@ -39,6 +43,8 @@ const SongsListScreen = (props) => {
 
   return (
     <View style={{ padding: 30 }}>
+      <Button title="Logout" color={"red"} onPress={props.onLogoutPress} />
+
       <FlatList
         data={songsListTitles}
         renderItem={(itemData) => {
